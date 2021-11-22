@@ -4,10 +4,13 @@ function randomInteger(min, max) {
 	return Math.round(rand);
 }
 
+AREA_WIDTH = 900;
+AREA_HEIGHT = 800;
+
 const svg = d3.select("#network")
 	.append("svg")
-		.attr('height', 600)
-		.attr('width', 700)
+		.attr('height', AREA_HEIGHT)
+		.attr('width', AREA_WIDTH)
 	// .append("g")
 		// .attr("stroke", "#ccc")
 		// .attr("stroke-opacity", "1")
@@ -16,27 +19,122 @@ const svg = d3.select("#network")
 
 let network_data = {
 	nodes: [
-		{ id: 1, value: 10 },
-		{ id: 2, value: 15 },
-		{ id: 3, value: 10 },
-		{ id: 4, value: 12 },
-		{ id: 5, value: 10 },
-		{ id: 6, value: 11 },
-		{ id: 7, value: 8 }
+		{ id: 0, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 1, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 2, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 3, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 4, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 5, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 6, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 7, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 8, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 9, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 10, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 11, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 12, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 13, name: 'John Week', links_count: 0, x: null, y: null },
+		{ id: 14, name: 'John Week', links_count: 0, x: null, y: null },
 	],
 	links: [
-		{ source: 1, target: 2 },
+		{ source: 0, target: 5 },
 		{ source: 1, target: 4 },
-		{ source: 2, target: 1 },
+		{ source: 2, target: 4 },
 		{ source: 3, target: 6 },
-		{ source: 6, target: 7 }
+		{ source: 5, target: 2 },
+		{ source: 5, target: 6 },
+		{ source: 5, target: 8 },
+		{ source: 6, target: 1 },
+		{ source: 7, target: 9 },
+		{ source: 9, target: 4 },
+		{ source: 11, target: 4 },
+		{ source: 11, target: 9 },
+		{ source: 12, target: 9 },
+		{ source: 13, target: 5 },
+		{ source: 14, target: 7 },
 	]
 }
 
-network_data.nodes.map((item, n) => {
-	item.x = randomInteger(0, 700)
-	item.y = randomInteger(0, 600)
-})
+console.log(network_data.nodes)
+
+function calc_radiuses_depends_on_links_count(){
+	network_data.links.map((item, n) => {
+		network_data.nodes.filter(_ => _['id'] == item.source)[0].links_count += 1;
+		network_data.nodes.filter(_ => _['id'] == item.target)[0].links_count += 1;
+	})
+}
+calc_radiuses_depends_on_links_count();
+
+
+function sort_nodes_by_links_count(nodes){
+	return nodes.sort(function(i, j){
+		if( i.links_count <= j.links_count ) return 1;
+		else if ( i.links_count >= j.links_count ) return -1;
+		else return 0;
+	})
+}
+sorted_nodes = sort_nodes_by_links_count(network_data.nodes.slice())
+console.log(sorted_nodes)
+
+MIN_LINKED = 20;
+MAX_LINKED = 100;
+MIN_UNLINKED = 1200;
+MAX_UNLINKED = 1400;
+
+function calc_positions(){
+	sorted_nodes.map((item, n) => {
+
+		console.log(item.id, item.x, item.y);
+		if( item.x == null ){
+			network_data.nodes[item.id].x = randomInteger(0, AREA_WIDTH)
+			network_data.nodes[item.id].y = randomInteger(0, AREA_HEIGHT)
+		}
+
+		linked_nodes = []
+
+		// Получаем список id'шников тех узлов, для которых текущий - source
+		network_data.links.filter(_ => _["source"] == item.id).map((_item, _n) => {
+			linked_nodes.push(_item.target)
+		})
+
+		// Получаем список id'шников тех узлов, для которых текущий - target
+		network_data.links.filter(_ => _["target"] == item.id).map((_item, _n) => {
+			linked_nodes.push(_item.source)
+		})
+
+		console.log(linked_nodes)
+
+		// Для всех связанных узлов сгенерировать координаты
+		linked_nodes.map((_item, _n) => {
+			if(network_data.nodes[_item].x == null){
+				let tmp_x = -1;
+				let tmp_y = -1;
+				let final_x = -1;
+				let final_y = -1;
+
+				do {
+					tmp_x = randomInteger(MIN_LINKED, MAX_LINKED)
+					if(randomInteger(0,1) == 0) tmp_x = -tmp_x
+					final_x = item.x + tmp_x
+					console.log(final_x)
+
+					tmp_l = randomInteger(MIN_LINKED, MAX_LINKED)
+
+					tmp_y = Math.sqrt( Math.abs( Math.pow(tmp_l, 2) - Math.pow(tmp_x, 2) ) )
+					if(randomInteger(0,1) == 0) tmp_y = -tmp_y
+					final_y = item.y + tmp_y
+				} while (  ( final_x < 0 ) || ( final_x > AREA_WIDTH) ||
+				 ( final_y < 0 ) || ( final_y > AREA_HEIGHT) )
+
+					network_data.nodes[_item].x = final_x
+					network_data.nodes[_item].y = final_y
+			}
+		})
+
+	})
+}
+calc_positions()
+
+
 
 function draw_network(){
 
@@ -55,10 +153,15 @@ function draw_network(){
 
 	network_data.nodes.map((item, n) => {
 		svg.append("circle")
-			.attr("r", item.value)
-			.attr("cx", item.x)
-			.attr("cy", item.y)
-			.attr("fill", "steelblue")
+				.attr("r", Math.log(100*item.links_count))
+				.attr("cx", item.x)
+				.attr("cy", item.y)
+				.attr("fill", "steelblue")
+		svg.append("text")
+				.attr("x", item.x - 10)
+				.attr("y", item.y - 10)
+				// .text('(' + item.id + ')' + item.name)
+				.text(item.id)
 	});
 
 }
