@@ -65,6 +65,9 @@ function calc_radiuses_depends_on_links_count(){
 calc_radiuses_depends_on_links_count();
 
 
+
+
+
 function sort_nodes_by_links_count(nodes){
 	return nodes.sort(function(i, j){
 		if( i.links_count <= j.links_count ) return 1;
@@ -75,8 +78,12 @@ function sort_nodes_by_links_count(nodes){
 sorted_nodes = sort_nodes_by_links_count(network_data.nodes.slice())
 console.log(sorted_nodes)
 
+
+
+
+
 MIN_LINKED = 20;
-MAX_LINKED = 100;
+MAX_LINKED = 70;
 MIN_UNLINKED = 1200;
 MAX_UNLINKED = 1400;
 
@@ -85,8 +92,8 @@ function calc_positions(){
 
 		console.log(item.id, item.x, item.y);
 		if( item.x == null ){
-			network_data.nodes[item.id].x = randomInteger(0, AREA_WIDTH)
-			network_data.nodes[item.id].y = randomInteger(0, AREA_HEIGHT)
+			network_data.nodes[item.id].x = randomInteger(100, AREA_WIDTH - 100)
+			network_data.nodes[item.id].y = randomInteger(100, AREA_HEIGHT - 100)
 		}
 
 		linked_nodes = []
@@ -106,6 +113,7 @@ function calc_positions(){
 		// Для всех связанных узлов сгенерировать координаты
 		linked_nodes.map((_item, _n) => {
 			if(network_data.nodes[_item].x == null){
+
 				let tmp_x = -1;
 				let tmp_y = -1;
 				let final_x = -1;
@@ -117,7 +125,8 @@ function calc_positions(){
 					final_x = item.x + tmp_x
 					console.log(final_x)
 
-					tmp_l = randomInteger(MIN_LINKED, MAX_LINKED)
+					tmp_l = MAX_LINKED
+					// tmp_l = randomInteger(MIN_LINKED, MAX_LINKED)
 
 					tmp_y = Math.sqrt( Math.abs( Math.pow(tmp_l, 2) - Math.pow(tmp_x, 2) ) )
 					if(randomInteger(0,1) == 0) tmp_y = -tmp_y
@@ -153,7 +162,7 @@ function draw_network(){
 
 	network_data.nodes.map((item, n) => {
 		svg.append("circle")
-				.attr("r", Math.log(100*item.links_count))
+				.attr("r", Math.log(15)*(item.links_count+1))
 				.attr("cx", item.x)
 				.attr("cy", item.y)
 				.attr("fill", "steelblue")
