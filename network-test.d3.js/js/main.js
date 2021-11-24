@@ -1,178 +1,205 @@
-function randomInteger(min, max) {
-	// получить случайное число от (min-0.5) до (max+0.5)
-	let rand = min - 0.5 + Math.random() * (max - min + 1);
-	return Math.round(rand);
+let miserables = {
+  nodes: [
+    { id: 0, name: 'John Week', links_count: 0},
+    { id: 1, name: 'John Week', links_count: 0},
+    { id: 2, name: 'John Week', links_count: 0},
+    { id: 3, name: 'John Week', links_count: 0},
+    { id: 4, name: 'John Week', links_count: 0},
+    { id: 5, name: 'John Week', links_count: 0},
+    { id: 6, name: 'John Week', links_count: 0},
+    { id: 7, name: 'John Week', links_count: 0},
+    { id: 8, name: 'John Week', links_count: 0},
+    { id: 9, name: 'John Week', links_count: 0},
+    { id: 10, name: 'John Week', links_count: 0},
+    { id: 11, name: 'John Week', links_count: 0},
+    { id: 12, name: 'John Week', links_count: 0},
+    { id: 13, name: 'John Week', links_count: 0},
+    { id: 14, name: 'John Week', links_count: 0},
+  ],
+  links: [
+    { source: 0, target: 5 },
+    { source: 1, target: 4 },
+    { source: 2, target: 4 },
+    { source: 3, target: 6 },
+    { source: 5, target: 2 },
+    { source: 5, target: 6 },
+    { source: 5, target: 8 },
+    { source: 6, target: 1 },
+    { source: 7, target: 9 },
+    { source: 9, target: 4 },
+    { source: 11, target: 4 },
+    { source: 11, target: 9 },
+    { source: 12, target: 9 },
+    { source: 13, target: 5 },
+    { source: 14, target: 7 },
+  ]
 }
 
-AREA_WIDTH = 900;
-AREA_HEIGHT = 800;
+//==============================================================================
 
-const svg = d3.select("#network")
-	.append("svg")
-		.attr('height', AREA_HEIGHT)
-		.attr('width', AREA_WIDTH)
-	// .append("g")
-		// .attr("stroke", "#ccc")
-		// .attr("stroke-opacity", "1")
-		// .attr("stroke-width", "1.5")
+function ForceGraph({
+  nodes, // an iterable of node objects (typically [{id}, …])
+  links // an iterable of link objects (typically [{source, target}, …])
+}, {
+  nodeId = d => d.id, // given d in nodes, returns a unique identifier (string)
+  nodeGroup, // given d in nodes, returns an (ordinal) value for color
+  nodeGroups, // an array of ordinal values representing the node groups
+  nodeTitle, // given d in nodes, a title string
+  nodeFill = "currentColor", // node stroke fill (if not using a group color encoding)
+  nodeStroke = "#fff", // node stroke color
+  nodeStrokeWidth = 1.5, // node stroke width, in pixels
+  nodeStrokeOpacity = 1, // node stroke opacity
+  nodeRadius = 5, // node radius, in pixels
+  nodeStrength,
+  linkSource = ({source}) => source, // given d in links, returns a node identifier string
+  linkTarget = ({target}) => target, // given d in links, returns a node identifier string
+  linkStroke = "#999", // link stroke color
+  linkStrokeOpacity = 0.6, // link stroke opacity
+  linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
+  linkStrokeLinecap = "round", // link stroke linecap
+  linkStrength,
+  listDistance,
+  colors = d3.schemeTableau10, // an array of color strings, for the node groups
+  width = 640, // outer width, in pixels
+  height = 400, // outer height, in pixels
+  invalidation // when this promise resolves, stop the simulation
+} = {}) {
+  // Compute values.
+  const N = d3.map(nodes, nodeId).map(intern);
+  const LS = d3.map(links, linkSource).map(intern);
+  const LT = d3.map(links, linkTarget).map(intern);
+  if (nodeTitle === undefined) nodeTitle = (_, i) => N[i];
+  const T = nodeTitle == null ? null : d3.map(nodes, nodeTitle);
+  const G = nodeGroup == null ? null : d3.map(nodes, nodeGroup).map(intern);
+  const W = typeof linkStrokeWidth !== "function" ? null : d3.map(links, linkStrokeWidth);
+
+  // Replace the input nodes and links with mutable objects for the simulation.
+  nodes = d3.map(nodes, (_, i) => ({id: N[i]}));
+  links = d3.map(links, (_, i) => ({source: LS[i], target: LT[i]}));
 
 
-let network_data = {
-	nodes: [
-		{ id: 0, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 1, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 2, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 3, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 4, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 5, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 6, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 7, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 8, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 9, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 10, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 11, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 12, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 13, name: 'John Week', links_count: 0, x: null, y: null },
-		{ id: 14, name: 'John Week', links_count: 0, x: null, y: null },
-	],
-	links: [
-		{ source: 0, target: 5 },
-		{ source: 1, target: 4 },
-		{ source: 2, target: 4 },
-		{ source: 3, target: 6 },
-		{ source: 5, target: 2 },
-		{ source: 5, target: 6 },
-		{ source: 5, target: 8 },
-		{ source: 6, target: 1 },
-		{ source: 7, target: 9 },
-		{ source: 9, target: 4 },
-		{ source: 11, target: 4 },
-		{ source: 11, target: 9 },
-		{ source: 12, target: 9 },
-		{ source: 13, target: 5 },
-		{ source: 14, target: 7 },
-	]
+  
+  function calc_radiuses_depends_on_links_count(){
+    nodes.map((item, n) => {
+      item.links_count = 0;
+    })
+    
+  	links.map((item, n) => {
+  		nodes.filter(_ => _['id'] == item.source)[0].links_count += 1;
+  		nodes.filter(_ => _['id'] == item.target)[0].links_count += 1;
+  	})
+  }
+  calc_radiuses_depends_on_links_count();
+
+  // Compute default domains.
+  if (G && nodeGroups === undefined) nodeGroups = d3.sort(G);
+
+  // Construct the scales.
+  const color = nodeGroup == null ? null : d3.scaleOrdinal(nodeGroups, colors);
+
+  // Construct the forces.
+  const forceNode = d3.forceManyBody();
+  const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
+  if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
+  if (linkStrength !== undefined) forceLink.strength(linkStrength);
+  if (listDistance !== undefined) forceLink.distance(listDistance);
+
+  const simulation = d3.forceSimulation(nodes)
+      .force("link", forceLink)
+      .force("charge", forceNode)
+      // .force("center",  d3.forceCenter())
+      .on("tick", ticked);
+
+  const svg = d3.select("#network").append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", [-width / 2, -height / 2, width, height])
+      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+  const link = svg.append("g")
+      .attr("stroke", linkStroke)
+      .attr("stroke-opacity", linkStrokeOpacity)
+      .attr("stroke-width", linkStrokeWidth) //typeof linkStrokeWidth !== "function" ? linkStrokeWidth : null)
+      .attr("stroke-linecap", linkStrokeLinecap)
+    .selectAll("line")
+    .data(links)
+    .join("line");
+
+  const node = svg.append("g")
+      .attr("fill", nodeFill)
+      .attr("stroke", nodeStroke)
+      .attr("stroke-opacity", nodeStrokeOpacity)
+      .attr("stroke-width", nodeStrokeWidth)
+    .selectAll("circle")
+    .data(nodes)
+    .join("circle")
+      .attr("r", nodeRadius)
+      .call(drag(simulation));
+
+  if (W) link.attr("stroke-width", ({index: i}) => W[i]);
+  // if (G) node.attr("fill", ({index: i}) => "black");
+  if (T) node.append("title").text(({index: i}) => T[i]);
+  if (invalidation != null) invalidation.then(() => simulation.stop());
+
+  function intern(value) {
+    return value !== null && typeof value === "object" ? value.valueOf() : value;
+  }
+
+  function ticked() {
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
+
+    node
+      .attr("cx", d => d.x)
+      .attr("cy", d => d.y);
+  }
+
+  function drag(simulation) {    
+    function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+    }
+    
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
+    
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
+    
+    return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+  }
+
+  return Object.assign(svg.node(), {scales: {color}});
 }
 
-console.log(network_data.nodes)
+//==============================================================================
 
-function calc_radiuses_depends_on_links_count(){
-	network_data.links.map((item, n) => {
-		network_data.nodes.filter(_ => _['id'] == item.source)[0].links_count += 1;
-		network_data.nodes.filter(_ => _['id'] == item.target)[0].links_count += 1;
-	})
-}
-calc_radiuses_depends_on_links_count();
-
-
-
-
-
-function sort_nodes_by_links_count(nodes){
-	return nodes.sort(function(i, j){
-		if( i.links_count <= j.links_count ) return 1;
-		else if ( i.links_count >= j.links_count ) return -1;
-		else return 0;
-	})
-}
-sorted_nodes = sort_nodes_by_links_count(network_data.nodes.slice())
-console.log(sorted_nodes)
-
-
-
-
-
-MIN_LINKED = 20;
-MAX_LINKED = 70;
-MIN_UNLINKED = 1200;
-MAX_UNLINKED = 1400;
-
-function calc_positions(){
-	sorted_nodes.map((item, n) => {
-
-		console.log(item.id, item.x, item.y);
-		if( item.x == null ){
-			network_data.nodes[item.id].x = randomInteger(100, AREA_WIDTH - 100)
-			network_data.nodes[item.id].y = randomInteger(100, AREA_HEIGHT - 100)
-		}
-
-		linked_nodes = []
-
-		// Получаем список id'шников тех узлов, для которых текущий - source
-		network_data.links.filter(_ => _["source"] == item.id).map((_item, _n) => {
-			linked_nodes.push(_item.target)
-		})
-
-		// Получаем список id'шников тех узлов, для которых текущий - target
-		network_data.links.filter(_ => _["target"] == item.id).map((_item, _n) => {
-			linked_nodes.push(_item.source)
-		})
-
-		console.log(linked_nodes)
-
-		// Для всех связанных узлов сгенерировать координаты
-		linked_nodes.map((_item, _n) => {
-			if(network_data.nodes[_item].x == null){
-
-				let tmp_x = -1;
-				let tmp_y = -1;
-				let final_x = -1;
-				let final_y = -1;
-
-				do {
-					tmp_x = randomInteger(MIN_LINKED, MAX_LINKED)
-					if(randomInteger(0,1) == 0) tmp_x = -tmp_x
-					final_x = item.x + tmp_x
-					console.log(final_x)
-
-					tmp_l = MAX_LINKED
-					// tmp_l = randomInteger(MIN_LINKED, MAX_LINKED)
-
-					tmp_y = Math.sqrt( Math.abs( Math.pow(tmp_l, 2) - Math.pow(tmp_x, 2) ) )
-					if(randomInteger(0,1) == 0) tmp_y = -tmp_y
-					final_y = item.y + tmp_y
-				} while (  ( final_x < 0 ) || ( final_x > AREA_WIDTH) ||
-				 ( final_y < 0 ) || ( final_y > AREA_HEIGHT) )
-
-					network_data.nodes[_item].x = final_x
-					network_data.nodes[_item].y = final_y
-			}
-		})
-
-	})
-}
-calc_positions()
-
-
-
-function draw_network(){
-
-	network_data.links.map((item, n) => {
-		svg.append("line")
-			.attr("x1", network_data.nodes.filter(
-				_ => _["id"] == item.source)[0].x)
-			.attr("y1", network_data.nodes.filter(
-				_ => _["id"] == item.source)[0].y)
-			.attr("x2", network_data.nodes.filter(
-				_ => _["id"] == item.target)[0].x)
-			.attr("y2", network_data.nodes.filter(
-				_ => _["id"] == item.target)[0].y)
-			.attr("stroke", "black")
-	});
-
-	network_data.nodes.map((item, n) => {
-		svg.append("circle")
-				.attr("r", Math.log(15)*(item.links_count+1))
-				.attr("cx", item.x)
-				.attr("cy", item.y)
-				.attr("fill", "steelblue")
-		svg.append("text")
-				.attr("x", item.x - 10)
-				.attr("y", item.y - 10)
-				// .text('(' + item.id + ')' + item.name)
-				.text(item.id)
-	});
-
-}
-
-draw_network();
+chart = ForceGraph(miserables, {
+  nodeId: d => d.id,
+  nodeGroup: d => 1, //d.group,
+  nodeTitle: d => `${d.id}\n${d.group}`,
+  linkStrokeWidth: l => 1, //Math.sqrt(l.value),
+  nodeRadius: 10, //d => 2*Math.log(10*d.links_count),
+  // width,
+  nodeStroke: "red",
+  nodeStrokeWidth: 2,
+  linkStrokeOpacity: 1,
+  linkStrokeWidth: 0.5,
+  height: 600,
+  // linkStrength: 1,
+  listDistance: 100,
+  // nodeStrength: 0.000001,
+  // invalidation // a promise to stop the simulation when the cell is re-run
+})
