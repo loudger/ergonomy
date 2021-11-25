@@ -1,25 +1,33 @@
-let miserables = {
+function randomInteger(min, max) {
+	// получить случайное число от (min-0.5) до (max+0.5)
+	let rand = min - 0.5 + Math.random() * (max - min + 1);
+	return Math.round(rand);
+}
+
+//==============================================================================
+
+let network_data = {
   nodes: [
-    { id: 0, name: 'John Week', title: "TITLE", links_count: 0},
-    { id: 1, name: 'John Week', links_count: 0},
-    { id: 2, name: 'John Week', links_count: 0},
-    { id: 3, name: 'John Week', links_count: 0},
-    { id: 4, name: 'John Week', links_count: 0},
-    { id: 5, name: 'John Week', links_count: 0},
-    { id: 6, name: 'John Week', links_count: 0},
-    { id: 7, name: 'John Week', links_count: 0},
-    { id: 8, name: 'John Week', links_count: 0},
-    { id: 9, name: 'John Week', links_count: 0},
-    { id: 10, name: 'John Week', links_count: 0},
-    { id: 11, name: 'John Week', links_count: 0},
-    { id: 12, name: 'John Week', links_count: 0},
-    { id: 13, name: 'John Week', links_count: 0},
-    { id: 14, name: 'John Week', links_count: 0},
-    { id: 15, name: 'John Week', links_count: 0},
-    { id: 16, name: 'John Week', links_count: 0},
-    { id: 17, name: 'John Week', links_count: 0},
-    { id: 18, name: 'John Week', links_count: 0},
-    { id: 19, name: 'John Week', links_count: 0},
+    { id: 0, name: 'John Week'},
+    { id: 1, name: 'John Week'},
+    { id: 2, name: 'John Week'},
+    { id: 3, name: 'John Week'},
+    { id: 4, name: 'John Week'},
+    { id: 5, name: 'John Week'},
+    { id: 6, name: 'John Week'},
+    { id: 7, name: 'John Week'},
+    { id: 8, name: 'John Week'},
+    { id: 9, name: 'John Week'},
+    { id: 10, name: 'John Week'},
+    { id: 11, name: 'John Week'},
+    { id: 12, name: 'John Week'},
+    { id: 13, name: 'John Week'},
+    { id: 14, name: 'John Week'},
+    { id: 15, name: 'John Week'},
+    { id: 16, name: 'John Week'},
+    { id: 17, name: 'John Week'},
+    { id: 18, name: 'John Week'},
+    { id: 19, name: 'John Week'},
   ],
   links: [
     { source: 0, target: 1},
@@ -59,8 +67,9 @@ function ForceGraph({
   linkStrength,
   width = 640, // outer width, in pixels
   height = 400, // outer height, in pixels
+  marked_nodes_count = 0,
 
-  nodeFill = "currentColor", // node stroke fill (if not using a group color encoding)
+  nodeFill = "black", // node stroke fill (if not using a group color encoding)
   nodeStroke = "#fff", // node stroke color
   nodeStrokeWidth = 1.5, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
@@ -70,6 +79,7 @@ function ForceGraph({
   linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
   listDistance,
   textFill = "red",
+  textFillOpacity = 1
 } = {}) {
   // Compute values.
   const N = d3.map(nodes, nodeId).map(intern);
@@ -93,6 +103,36 @@ function ForceGraph({
   	})
   }
   calc_radiuses_depends_on_links_count();
+
+
+  function mark_random_nodes(nodes_count){
+    if( nodes_count > nodes.length ){
+      console.log("[ERROR] Array index out of bounds")
+      return
+    }
+
+    random_indexes = []
+    for(i = 0; i < nodes_count; i++){
+      random_index = randomInteger(0, nodes.length - 1)
+      if( random_indexes.includes(random_index) ){
+        i -= 1;
+      } else {
+        random_indexes.push(random_index)
+      }
+    }
+    console.log("random_indexes:", random_indexes);
+
+    nodes.map((item, n) => {
+      if( random_indexes.includes(n) ){
+        item.mark = true;
+      } else {
+        item.mark = false;
+      }
+    })
+
+    console.log("nodes:", nodes)
+  }
+  mark_random_nodes(marked_nodes_count);
 
 
   // Construct the forces.
@@ -124,7 +164,6 @@ function ForceGraph({
     .join("line");
 
   const node = svg.append("g")
-      .attr("fill", nodeFill)
       .attr("stroke", nodeStroke)
       .attr("stroke-opacity", nodeStrokeOpacity)
       .attr("stroke-width", nodeStrokeWidth)
@@ -132,10 +171,12 @@ function ForceGraph({
     .data(nodes)
     .join("circle")
       .attr("r", nodeRadius)
+      .attr("fill", nodeFill)
       .call(drag(simulation))
 
   const text = svg.append("g")
       .attr("fill", textFill)
+      .attr("fill-opacity", textFillOpacity)
     .selectAll("text")
     .data(nodes)
     .join("text")
@@ -193,20 +234,21 @@ function ForceGraph({
 
 //==============================================================================
 
-chart = ForceGraph(miserables, {
+chart = ForceGraph(network_data, {
   nodeId: d => d.id,
   nodeStrength: -50, //default -30
   width: 1000,
   height: 550,
+  marked_nodes_count: 6,
 
-  nodeFill: "currentColor", // node stroke fill (if not using a group color encoding)
-  nodeStroke: "red", // node stroke color
   nodeStrokeWidth: 2, // node stroke width, in pixels
   nodeStrokeOpacity: 1, // node stroke opacity
   nodeRadius: d => 2*Math.log(10*d.links_count), // node radius, in pixels
+  nodeFill: d => d.mark ? "red" : "blue", //"currentColor", // node stroke fill (if not using a group color encoding)
   linkStroke: "#999", // link stroke color
   linkStrokeOpacity: 0.6, // link stroke opacity
   linkStrokeWidth: l => 1,
   listDistance: 70,
-  textFill: "red"
+  textFill: "black",
+  textFillOpacity: 0.5
 })
