@@ -67,9 +67,10 @@ function ForceGraph({
   linkStrength,
   width = 640, // outer width, in pixels
   height = 400, // outer height, in pixels
-  marked_nodes_count = 0,
+  markedNodesCount = 0,
 
   nodeFill = "black", // node stroke fill (if not using a group color encoding)
+  nodeOpacity = 1,
   nodeStroke = "#fff", // node stroke color
   nodeStrokeWidth = 1.5, // node stroke width, in pixels
   nodeStrokeOpacity = 1, // node stroke opacity
@@ -77,7 +78,7 @@ function ForceGraph({
   linkStroke = "#999", // link stroke color
   linkStrokeOpacity = 0.6, // link stroke opacity
   linkStrokeWidth = 1.5, // given d in links, returns a stroke width in pixels
-  listDistance,
+  linkDistance,
   textFill = "red",
   textFillOpacity = 1
 } = {}) {
@@ -132,7 +133,7 @@ function ForceGraph({
 
     console.log("nodes:", nodes)
   }
-  mark_random_nodes(marked_nodes_count);
+  mark_random_nodes(markedNodesCount);
 
 
   // Construct the forces.
@@ -140,7 +141,7 @@ function ForceGraph({
   const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
   if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
   if (linkStrength !== undefined) forceLink.strength(linkStrength);
-  if (listDistance !== undefined) forceLink.distance(listDistance);
+  if (linkDistance !== undefined) forceLink.distance(linkDistance);
 
   const simulation = d3.forceSimulation(nodes)
       .force("link", forceLink)
@@ -150,6 +151,7 @@ function ForceGraph({
       .alphaDecay(0.0128);
 
   const svg = d3.select("#network").append("svg")
+      .attr("overflow", "visible")
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", [-width / 2, -height / 2, width, height])
@@ -158,15 +160,17 @@ function ForceGraph({
   const link = svg.append("g")
       .attr("stroke", linkStroke)
       .attr("stroke-opacity", linkStrokeOpacity)
-      .attr("stroke-width", linkStrokeWidth) //typeof linkStrokeWidth !== "function" ? linkStrokeWidth : null)
     .selectAll("line")
     .data(links)
-    .join("line");
+    .join("line")
+      .attr("stroke-width", linkStrokeWidth);
+
 
   const node = svg.append("g")
       .attr("stroke", nodeStroke)
       .attr("stroke-opacity", nodeStrokeOpacity)
       .attr("stroke-width", nodeStrokeWidth)
+      .attr("fill-opacity", nodeOpacity)
     .selectAll("circle")
     .data(nodes)
     .join("circle")
@@ -200,8 +204,8 @@ function ForceGraph({
       .attr("cy", d => d.y);
 
     text
-      .attr("x", d => d.x - 4)
-      .attr("y", d => d.y - 15)
+      .attr("x", d => d.x - 5)
+      .attr("y", d => d.y - 20)
       .text(d => d.id)
   }
 
@@ -234,21 +238,51 @@ function ForceGraph({
 
 //==============================================================================
 
-chart = ForceGraph(network_data, {
-  nodeId: d => d.id,
-  nodeStrength: -50, //default -30
-  width: 1000,
-  height: 550,
-  marked_nodes_count: 6,
+function clear_network_area(){
 
-  nodeStrokeWidth: 2, // node stroke width, in pixels
-  nodeStrokeOpacity: 1, // node stroke opacity
-  nodeRadius: d => 2*Math.log(10*d.links_count), // node radius, in pixels
-  nodeFill: d => d.mark ? "red" : "blue", //"currentColor", // node stroke fill (if not using a group color encoding)
-  linkStroke: "#999", // link stroke color
-  linkStrokeOpacity: 0.6, // link stroke opacity
-  linkStrokeWidth: l => 1,
-  listDistance: 70,
-  textFill: "black",
-  textFillOpacity: 0.5
-})
+  document.querySelector("#network").innerHTML = "";
+  document.querySelector("#control_panel").reset();
+
+}
+
+function apply_settings(){
+
+  document.querySelector("#network").innerHTML = "";
+
+  markedNodesCount = document.querySelector("#marked_nodes_count_selector").value;
+  nodeStrokeWidth = document.querySelector("#nodes_stroke_width_selector").value;
+  nodeStrokeOpacity = document.querySelector("#nodes_stroke_opacity_selector").value;
+  nodeStroke = document.querySelector("#nodes_stroke_color_selector").value;
+  nodeOpacity = document.querySelector("#nodes_opacity_selector").value;
+  nodeFillOriginal = document.querySelector("#node_color_selector").value;
+  nodeFillMarked = document.querySelector("#marked_node_color_selector").value;
+  linkStroke = document.querySelector("#link_stroke_color_selector").value;
+  linkStrokeOpacity = document.querySelector("#link_stroke_opacity_selector").value;
+  linkStrokeWidth = document.querySelector("#link_stroke_width_selector").value;
+  linkDistance = document.querySelector("#link_distance_selector").value;
+  textFill = document.querySelector("#text_color_selector").value;
+  textFillOpacity = document.querySelector("#text_opacity_selector").value;
+
+
+  chart = ForceGraph(network_data, {
+    nodeId: d => d.id,
+    nodeStrength: -70, //default -30
+    // width: 1000,
+    // height: 550,
+    markedNodesCount: markedNodesCount,
+  
+    nodeStrokeWidth: nodeStrokeWidth, // node stroke width, in pixels
+    nodeStrokeOpacity: nodeStrokeOpacity, // node stroke opacity
+    nodeStroke: nodeStroke,
+    nodeOpacity: nodeOpacity,
+    nodeRadius: d => 4*Math.log(10*d.links_count), // node radius, in pixels
+    nodeFill: d => d.mark ? nodeFillMarked : nodeFillOriginal, //"currentColor", // node stroke fill (if not using a group color encoding)
+    linkStroke: linkStroke, // link stroke color
+    linkStrokeOpacity: linkStrokeOpacity, // link stroke opacity
+    linkStrokeWidth: linkStrokeWidth,
+    linkDistance: linkDistance,
+    textFill: textFill,
+    textFillOpacity: textFillOpacity
+  })
+
+}

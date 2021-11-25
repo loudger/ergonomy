@@ -1,3 +1,49 @@
+.wrapper {
+    /* position: absolute; */
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+#control_panel {
+    /* position: relative; */
+    /* float: left; */
+    /* grid-row: 1; */
+    /* border: 1px solid black; */
+    /* height: 100px; */
+    width: 400px;
+}
+
+#control_panel > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#control_panel > div > input {
+    margin: 10px;
+}
+
+#control_panel > p {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    margin: 5px;
+}
+
+#control_panel > p > input {
+    width: 100px;
+}
+
+#network{
+    padding-top: 300px;
+    padding-left: 370px;
+    /* position: relative; */
+    /* grid-row: 2; */
+    /* border: 1px solid black; */
+    /* height: 100px; */
+    /* width: 100px; */
+    /* overflow: visible; */
+}
+
 svg {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    /* overflow: visible; */
 }
