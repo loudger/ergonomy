@@ -579,3 +579,36 @@ function apply_settings(){
   })
 
 }
+
+
+var IS_TIMER_RUN = false;
+var ASYNC_TIMER;
+
+document.querySelector("#timer_toggler").addEventListener("click", function(e){
+  if(IS_TIMER_RUN){
+    console.log('stop');
+
+    clearInterval(ASYNC_TIMER)
+    document.querySelector("#timer_toggler").value = "Запустить таймер"
+
+    IS_TIMER_RUN = false;
+  }else{
+    console.log("go!");
+
+    var start = Date.now();
+    ASYNC_TIMER = setInterval(function() {
+        var delta = Date.now() - start; // milliseconds elapsed since start
+        // delta = Math.round10(delta / 1000, -1); // in seconds
+        delta = (delta / 1000).toFixed(1); // in seconds
+        // alternatively just show wall clock time:
+        // output(new Date().toUTCString());
+        // console.log(delta);
+        document.querySelector("#timer_value").innerText = delta;
+    }, 100); // update about every second
+
+    document.querySelector("#timer_toggler").value = "Остановить таймер"
+
+    IS_TIMER_RUN = true;
+  }
+
+})

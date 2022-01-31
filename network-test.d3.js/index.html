@@ -29,6 +29,10 @@
             <p>Длина ребра (px): <input type="number" id="link_distance_selector" value="70"></p>
             <p>Цвет текста: <input type="color" id="text_color_selector" value="purple"></p>
             <p>Прозрачность текста: <input type="number" id="text_opacity_selector" min="0" max="1" step="0.05" value="0.75"></p>
+            <div class="timer_wrapper">
+                <input type="button" value="Запустить таймер" class="button" id="timer_toggler">
+                <p class="timer_value_wrapper">Прошло секунд: <span id="timer_value">0</span></p>
+            </div>
         </form>
         <div id="network"></div>
     </div>
