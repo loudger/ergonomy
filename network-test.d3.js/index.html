@@ -24,7 +24,7 @@
             <p>Цвет узла: <input type="color" id="node_color_selector" value="#73db6b"></p>
             <p>Цвет отмеченного узла: <input type="color" id="marked_node_color_selector" value="#ff0000"></p>
             <p>Цвет ребра: <input type="color" id="link_stroke_color_selector" value="#46a4c3"></p>
-            <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.35"></p>
+            <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.75"></p>
             <p>Ширина ребра (px): <input type="number" id="link_stroke_width_selector" value="2"></p>
             <p>Длина ребра (px): <input type="number" id="link_distance_selector" value="70"></p>
             <p>Цвет текста: <input type="color" id="text_color_selector" value="purple"></p>
@@ -32,6 +32,9 @@
             <div class="timer_wrapper">
                 <input type="button" value="Запустить таймер" class="button" id="timer_toggler">
                 <p class="timer_value_wrapper">Прошло секунд: <span id="timer_value">0</span></p>
+            </div>
+            <div>
+                <input type="button" value="Показать текст" class="button" id="text_layers_toggler" onclick="toggle_text_layers()">
             </div>
         </form>
         <div id="network"></div>
