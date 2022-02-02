@@ -8,6 +8,13 @@ function randomInteger(min, max) {
 	return Math.round(rand);
 }
 
+function randn_bm() {
+  var u = 0, v = 0;
+  while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+  while(v === 0) v = Math.random();
+  return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+}
+
 //==============================================================================
 
 // let network_data = {
@@ -234,16 +241,16 @@ function randomInteger(min, max) {
 
 var network_data = {
   nodes: [
-    { id: 0, name: 'John Week'},
-    { id: 1, name: 'John Week'},
-    { id: 2, name: 'John Week'},
-    { id: 3, name: 'John Week'},
-    { id: 4, name: 'John Week'},
-    { id: 5, name: 'John Week'},
-    { id: 6, name: 'John Week'},
-    { id: 7, name: 'John Week'},
-    { id: 8, name: 'John Week'},
-    { id: 9, name: 'John Week'},
+    { id: 0,  name: 'John Week'},
+    { id: 1,  name: 'John Week'},
+    { id: 2,  name: 'John Week'},
+    { id: 3,  name: 'John Week'},
+    { id: 4,  name: 'John Week'},
+    { id: 5,  name: 'John Week'},
+    { id: 6,  name: 'John Week'},
+    { id: 7,  name: 'John Week'},
+    { id: 8,  name: 'John Week'},
+    { id: 9,  name: 'John Week'},
     { id: 10, name: 'John Week'},
     { id: 11, name: 'John Week'},
     { id: 12, name: 'John Week'},
@@ -286,66 +293,66 @@ var network_data = {
     { id: 49, name: 'John Week'},
   ],
   links: [
-    { id: 0,  weight: 1, source: 32, target: 1},
-    { id: 1,  weight: 1, source: 0, target: 2},
-    { id: 2,  weight: 2, source: 0, target: 3},
-    { id: 3,  weight: 2, source: 0, target: 4},
-    { id: 4,  weight: 1, source: 0, target: 5},
-    { id: 5,  weight: 4, source: 0, target: 8},
-    { id: 6,  weight: 5, source: 0, target: 13},
-    { id: 7,  weight: 6, source: 1, target: 6},
-    { id: 8,  weight: 3, source: 1, target: 11},
-    { id: 9,  weight: 2, source: 1, target: 16},
-    { id: 10, weight: 4, source: 1, target: 19},
-    { id: 11, weight: 5, source: 2, target: 10},
-    { id: 12, weight: 6, source: 2, target: 18},
-    { id: 13, weight: 7, source: 17, target: 2 },
-    { id: 14, weight: 6, source: 17, target: 4 },
-    { id: 15, weight: 6, source: 17, target: 7 },
-    { id: 16, weight: 5, source: 14, target: 9 },
-    { id: 17, weight: 4, source: 17, target: 14 },
-    { id: 18, weight: 3, source: 17, target: 12 },
-    { id: 19, weight: 1, source: 17, target: 15 },
-    { id: 20, weight: 2, source: 17, target: 20 },
-    { id: 21, weight: 1, source: 2, target: 21 },
-    { id: 22, weight: 2, source: 1, target: 22 },
-    { id: 23, weight: 3, source: 2, target: 23 },
-    { id: 24, weight: 4, source: 4, target: 24 },
-    { id: 25, weight: 5, source: 1, target: 25 },
-    { id: 26, weight: 6, source: 2, target: 26 },
-    { id: 27, weight: 4, source: 2, target: 28 },
-    { id: 28, weight: 3, source: 0, target: 27 },
-    { id: 29, weight: 2, source: 1, target: 29 },
-    { id: 30, weight: 3, source: 4, target: 30 },
-    { id: 31, weight: 3, source: 17, target: 31 },
-    { id: 32, weight: 4, source: 4, target: 32 },
-    { id: 33, weight: 3, source: 4, target: 33 },
-    { id: 34, weight: 3, source: 2, target: 34 },
-    { id: 35, weight: 5, source: 4, target: 35 },
-    { id: 36, weight: 3, source: 14, target: 36 },
-    { id: 37, weight: 3, source: 14, target: 37 },
-    { id: 38, weight: 3, source: 14, target: 38 },
-    { id: 39, weight: 6, source: 14, target: 39 },
-    { id: 40, weight: 3, source: 14, target: 40 },
-    { id: 41, weight: 3, source: 14, target: 41 },
-    { id: 42, weight: 3, source: 31, target: 42 },
-    { id: 43, weight: 4, source: 31, target: 43 },
-    { id: 44, weight: 3, source: 31, target: 44 },
-    { id: 45, weight: 3, source: 31, target: 45 },
-    { id: 46, weight: 3, source: 31, target: 46 },
-    { id: 47, weight: 1, source: 31, target: 47 },
-    { id: 48, weight: 2, source: 17, target: 48 },
-    { id: 49, weight: 3, source: 17, target: 49 },
-    { id: 50, weight: 7, source: 2, target: 4 },
-    { id: 51, weight: 3, source: 5, target: 21 },
-    { id: 52, weight: 3, source: 24, target: 27 },
-    { id: 53, weight: 3, source: 31, target: 10 },
-    { id: 54, weight: 1, source: 14, target: 1 },
-    { id: 55, weight: 1, source: 14, target: 30 },
-    { id: 56, weight: 3, source: 33, target: 17 },
-    { id: 57, weight: 3, source: 33, target: 14 },
-    { id: 58, weight: 3, source: 35, target: 32 },
-    { id: 59, weight: 2, source: 35, target: 24 },
+    { id: 0, source: 32, target: 1},
+    { id: 1, source: 0, target: 2},
+    { id: 2, source: 0, target: 3},
+    { id: 3, source: 0, target: 4},
+    { id: 4, source: 0, target: 5},
+    { id: 5, source: 0, target: 8},
+    { id: 6, source: 0, target: 13},
+    { id: 7, source: 1, target: 6},
+    { id: 8, source: 1, target: 11},
+    { id: 9, source: 1, target: 16},
+    { id: 10, source: 1, target: 19},
+    { id: 11, source: 2, target: 10},
+    { id: 12, source: 2, target: 18},
+    { id: 13, source: 17, target: 2 },
+    { id: 14, source: 17, target: 4 },
+    { id: 15, source: 17, target: 7 },
+    { id: 16, source: 14, target: 9 },
+    { id: 17, source: 17, target: 14 },
+    { id: 18, source: 17, target: 12 },
+    { id: 19, source: 17, target: 15 },
+    { id: 20, source: 17, target: 20 },
+    { id: 21, source: 2, target: 21 },
+    { id: 22, source: 1, target: 22 },
+    { id: 23, source: 2, target: 23 },
+    { id: 24, source: 4, target: 24 },
+    { id: 25, source: 1, target: 25 },
+    { id: 26, source: 2, target: 26 },
+    { id: 27, source: 2, target: 28 },
+    { id: 28, source: 0, target: 27 },
+    { id: 29, source: 1, target: 29 },
+    { id: 30, source: 4, target: 30 },
+    { id: 31, source: 17, target: 31 },
+    { id: 32, source: 4, target: 32 },
+    { id: 33, source: 4, target: 33 },
+    { id: 34, source: 2, target: 34 },
+    { id: 35, source: 4, target: 35 },
+    { id: 36, source: 14, target: 36 },
+    { id: 37, source: 14, target: 37 },
+    { id: 38, source: 14, target: 38 },
+    { id: 39, source: 14, target: 39 },
+    { id: 40, source: 14, target: 40 },
+    { id: 41, source: 14, target: 41 },
+    { id: 42, source: 31, target: 42 },
+    { id: 43, source: 31, target: 43 },
+    { id: 44, source: 31, target: 44 },
+    { id: 45, source: 31, target: 45 },
+    { id: 46, source: 31, target: 46 },
+    { id: 47, source: 31, target: 47 },
+    { id: 48, source: 17, target: 48 },
+    { id: 49, source: 17, target: 49 },
+    { id: 50, source: 2, target: 4 },
+    { id: 51, source: 5, target: 21 },
+    { id: 52, source: 24, target: 27 },
+    { id: 53, source: 31, target: 10 },
+    { id: 54, source: 14, target: 1 },
+    { id: 55, source: 14, target: 30 },
+    { id: 56, source: 33, target: 17 },
+    { id: 57, source: 33, target: 14 },
+    { id: 58, source: 35, target: 32 },
+    { id: 59, source: 35, target: 24 },
   ]
 }
 
@@ -357,17 +364,10 @@ function ForceGraph({
   nodes, // an iterable of node objects (typically [{id}, …])
   links // an iterable of link objects (typically [{source, target}, …])
 }, {
-  nodeId = d => d.id, // given d in nodes, returns a unique identifier (string)
-  nodeLinksCount = d => d.links_count,
-  linkId = d => d.id,
-  linkWeight = d => d.weight,
-  linkSource = ({source}) => source, // given d in links, returns a node identifier string
-  linkTarget = ({target}) => target, // given d in links, returns a node identifier string
   nodeStrength,
   linkStrength,
   width = 640, // outer width, in pixels
-  height = 400, // outer height, in pixels
-  markedNodesCount = 0,
+  height = 100, // outer height, in pixels
 
   nodeFill = "black", // node stroke fill (if not using a group color encoding)
   nodeOpacity = 1,
@@ -382,76 +382,25 @@ function ForceGraph({
   textFill = "red",
   textFillOpacity = 1
 } = {}) {
-  // Compute values.
-  const N = d3.map(nodes, nodeId).map(intern);
-  const NLC = d3.map(nodes, nodeLinksCount).map(intern);
-  const LL = d3.map(links, linkId).map(intern);
-  const LW = d3.map(links, linkWeight).map(intern);
-  const LS = d3.map(links, linkSource).map(intern);
-  const LT = d3.map(links, linkTarget).map(intern);
-  const W = typeof linkStrokeWidth !== "function" ? null : d3.map(links, linkStrokeWidth);
 
   // Replace the input nodes and links with mutable objects for the simulation.
-  nodes = d3.map(nodes, (_, i) => ({id: N[i], links_count: NLC[i]}));
-  links = d3.map(links, (_, i) => ({source: LS[i], target: LT[i], id: LL[i], weight: LW[i]}));
+  nodes = d3.map(nodes, (item, i) => ({
+    id: item.id,
+    links_count: item.links_count,
+    mark: item.mark
+  }));
 
-  
-
-
-
-
-
-  // function calc_radiuses_depends_on_links_count(){
-  //   nodes.map((item, n) => {
-  //     item.links_count = 0;
-  //   })
-    
-  // 	links.map((item, n) => {
-  // 		nodes.filter(_ => _['id'] == item.source)[0].links_count += 1;
-  // 		nodes.filter(_ => _['id'] == item.target)[0].links_count += 1;
-  // 	})
-  // }
-  // calc_radiuses_depends_on_links_count();
-
-
-  // function mark_random_nodes(nodes_count){
-  //   if( nodes_count > nodes.length ){
-  //     console.log("[ERROR] Array index out of bounds")
-  //     return
-  //   }
-
-  //   random_indexes = []
-  //   for(i = 0; i < nodes_count; i++){
-  //     random_index = randomInteger(0, nodes.length - 1)
-  //     if( random_indexes.includes(random_index) ){
-  //       i -= 1;
-  //     } else {
-  //       random_indexes.push(random_index)
-  //     }
-  //   }
-  //   console.log("random_indexes:", random_indexes);
-
-  //   nodes.map((item, n) => {
-  //     if( random_indexes.includes(n) ){
-  //       item.mark = true;
-  //     } else {
-  //       item.mark = false;
-  //     }
-  //   })
-
-  //   console.log("nodes:", nodes)
-  // }
-  // mark_random_nodes(markedNodesCount);
-
-
-
-
-
-
+  links = d3.map(links, (item, i) => ({
+    id: item.id,
+    source: item.source, 
+    target: item.target,
+    weight: item.weight,
+    mark: item.mark
+  }));
 
   // Construct the forces.
   const forceNode = d3.forceManyBody();
-  const forceLink = d3.forceLink(links).id(({index: i}) => N[i]);
+  const forceLink = d3.forceLink(links).id(d => d.id);
   if (nodeStrength !== undefined) forceNode.strength(nodeStrength);
   if (linkStrength !== undefined) forceLink.strength(linkStrength);
   if (linkDistance !== undefined) forceLink.distance(linkDistance);
@@ -471,11 +420,11 @@ function ForceGraph({
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
   const link = svg.append("g")
-    .attr("stroke", linkStroke)
-    .attr("stroke-opacity", linkStrokeOpacity)
   .selectAll("line")
   .data(links)
   .join("line")
+    .attr("stroke", linkStroke)
+    .attr("stroke-opacity", linkStrokeOpacity)
     .attr("stroke-width", linkStrokeWidth);
 
   const node = svg.append("g")
@@ -506,12 +455,6 @@ function ForceGraph({
   .data(links)
   .join("text");
 
-
-  if (W) link.attr("stroke-width", ({index: i}) => W[i]);
-
-  function intern(value) {
-    return value !== null && typeof value === "object" ? value.valueOf() : value;
-  }
 
   function ticked() {
     node
@@ -588,7 +531,14 @@ function toggle_text_layers(){
 }
 
 
-function calc_radiuses_depends_on_links_count(network_data){
+function generate_links_weights(){
+  network_data.links.map((item, n) => {
+    item.weight = randomInteger(1, 5);
+  })
+}
+
+
+function calc_links_count(){
   network_data.nodes.map((item, n) => {
     item.links_count = 0;
   })
@@ -599,13 +549,13 @@ function calc_radiuses_depends_on_links_count(network_data){
 }
 
 
-function mark_random_nodes(network_data, nodes_count){
-  if( nodes_count > network_data.nodes.length ){
+function mark_random_nodes(marked_nodes_count){
+  if( marked_nodes_count > network_data.nodes.length ){
     console.log("[ERROR] Array index out of bounds")
     return
   }
   random_indexes = []
-  for(i = 0; i < nodes_count; i++){
+  for(i = 0; i < marked_nodes_count; i++){
     random_index = randomInteger(0, network_data.nodes.length - 1)
     if( random_indexes.includes(random_index) ){
       i -= 1;
@@ -615,6 +565,32 @@ function mark_random_nodes(network_data, nodes_count){
   }
   // console.log("random_indexes:", random_indexes);
   network_data.nodes.map((item, n) => {
+    if( random_indexes.includes(n) ){
+      item.mark = true;
+    } else {
+      item.mark = false;
+    }
+  })
+  // console.log("nodes:", network_data.nodes)
+}
+
+
+function mark_random_links(marked_links_count){
+  if( marked_links_count > network_data.links.length ){
+    console.log("[ERROR] Array index out of bounds")
+    return
+  }
+  random_indexes = []
+  for(i = 0; i < marked_links_count; i++){
+    random_index = randomInteger(0, network_data.links.length - 1)
+    if( random_indexes.includes(random_index) ){
+      i -= 1;
+    } else {
+      random_indexes.push(random_index)
+    }
+  }
+  // console.log("random_indexes:", random_indexes);
+  network_data.links.map((item, n) => {
     if( random_indexes.includes(n) ){
       item.mark = true;
     } else {
@@ -636,7 +612,9 @@ function apply_settings(){
   nodeOpacity = document.querySelector("#nodes_opacity_selector").value;
   nodeFillOriginal = document.querySelector("#node_color_selector").value;
   nodeFillMarked = document.querySelector("#marked_node_color_selector").value;
-  linkStroke = document.querySelector("#link_stroke_color_selector").value;
+  markedLinksCount = document.querySelector("#marked_links_count_selector").value;
+  linkStrokeOriginal = document.querySelector("#link_stroke_color_selector").value;
+  linkStrokeMarked = document.querySelector("#marked_links_color_selector").value;
   linkStrokeOpacity = document.querySelector("#link_stroke_opacity_selector").value;
   linkStrokeWidth = document.querySelector("#link_stroke_width_selector").value;
   linkDistance = document.querySelector("#link_distance_selector").value;
@@ -644,15 +622,15 @@ function apply_settings(){
   textFillOpacity = document.querySelector("#text_opacity_selector").value;
 
 
-  calc_radiuses_depends_on_links_count(network_data);
-  mark_random_nodes(network_data, markedNodesCount);
+  generate_links_weights();
+  calc_links_count();
+  mark_random_nodes(markedNodesCount);
+  mark_random_links(markedLinksCount);
 
   chart = ForceGraph(network_data, {
-    // nodeId: d => d.id,
     nodeStrength: -70, //default -30
     // width: 1000,
     // height: 550,
-    markedNodesCount: markedNodesCount,
   
     nodeStrokeWidth: nodeStrokeWidth, // node stroke width, in pixels
     nodeStrokeOpacity: nodeStrokeOpacity, // node stroke opacity
@@ -660,11 +638,11 @@ function apply_settings(){
     nodeOpacity: nodeOpacity,
     nodeRadius: d => 4*Math.log(10*d.links_count), // node radius, in pixels
     nodeFill: d => d.mark ? nodeFillMarked : nodeFillOriginal, //"currentColor", // node stroke fill (if not using a group color encoding)
-    linkStroke: linkStroke, // link stroke color
-    linkStrokeOpacity: linkStrokeOpacity, // link stroke opacity
-    linkStrokeWidth: d => 1,
-    // linkStrokeWidth: d => 2*d.weight,
-    // linkStrokeWidth: linkStrokeWidth,
+    linkStroke: d => d.mark ? linkStrokeMarked : linkStrokeOriginal, // link stroke color
+    linkStrokeOpacity: d => 0.1 + 9*d.weight/100, // link stroke opacity
+    // linkStrokeOpacity: linkStrokeOpacity, // link stroke opacity
+    linkStrokeWidth: d => 3,
+    // linkStrokeWidth: d => d.weight,
     linkDistance: linkDistance,
     textFill: textFill,
     textFillOpacity: textFillOpacity

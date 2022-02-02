@@ -16,19 +16,25 @@
                 <input class="button is-danger" type="button" onclick="clear_network_area()" value="Очистить">
                 <input class="button is-primary" type="button" onclick="apply_settings()" value="Применить">
             </div>
+            <hr>
+            <p>Цвет узла: <input type="color" id="node_color_selector" value="#73db6b"></p>
             <p>Отметить узлов: <input type="number" id="marked_nodes_count_selector" value="0" onchange="apply_settings()"></p>
+            <p>Цвет отмеченного узла: <input type="color" id="marked_node_color_selector" value="#ff0000"></p>
             <p>Ширина рамки узла (px): <input type="number" id="nodes_stroke_width_selector" value="1"></p>
             <p>Прозрачность рамки узла: <input type="number" id="nodes_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.5"></p>
             <p>Цвет рамки узла: <input type="color" id="nodes_stroke_color_selector" value="#000000"></p>
             <p>Прозрачность узла: <input type="number" id="nodes_opacity_selector" min="0" max="1" step="0.05" value="0.95"></p>
-            <p>Цвет узла: <input type="color" id="node_color_selector" value="#73db6b"></p>
-            <p>Цвет отмеченного узла: <input type="color" id="marked_node_color_selector" value="#ff0000"></p>
+            <hr>
             <p>Цвет ребра: <input type="color" id="link_stroke_color_selector" value="#46a4c3"></p>
-            <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.75"></p>
+            <p>Отметить рёбер: <input type="number" id="marked_links_count_selector" value="0" onchange="apply_settings()"></p>
+            <p>Цвет отмеченного узла: <input type="color" id="marked_links_color_selector" value="#ff0000"></p>
             <p>Ширина ребра (px): <input type="number" id="link_stroke_width_selector" value="2"></p>
             <p>Длина ребра (px): <input type="number" id="link_distance_selector" value="70"></p>
+            <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.95"></p>
+            <hr>
             <p>Цвет текста: <input type="color" id="text_color_selector" value="purple"></p>
             <p>Прозрачность текста: <input type="number" id="text_opacity_selector" min="0" max="1" step="0.05" value="0.75"></p>
+            <hr>
             <div class="timer_wrapper">
                 <input type="button" value="Запустить таймер" class="button" id="timer_toggler">
                 <p class="timer_value_wrapper">Прошло секунд: <span id="timer_value">0</span></p>
