@@ -566,7 +566,7 @@ function toggle_text_layers(){
 
 function generate_links_weights(){
   network_data.links.map((item, n) => {
-    item.weight = randomInteger(1, 5);
+    item.weight = randomInteger(1, 10);
   })
 }
 

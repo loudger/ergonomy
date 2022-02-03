@@ -7,6 +7,11 @@ if __name__ == "__main__":
 	p2 = Parametеr("Ширина рамки узла", [0.2, 0.4, 0.6, 0.8, 1], 0.5)
 
 	g = Generator(p1, p2)
-	g.set_shift(4)
-	g.set_inaccuracy(-1.5, 1.5)
+	g.set_shift(5)
+	g.set_inaccuracy(-2, 2)
+	g.set_experiments_count(4)
+
+	# g.set_expr_plan()
+
 	g.run()
+
