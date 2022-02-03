@@ -516,6 +516,39 @@ function clear_network_area(){
 }
 
 
+function addTimer(){
+  document.querySelector("#timer_toggler").addEventListener("click", function(e){
+    if(IS_TIMER_RUN){
+      console.log('stop');
+
+      clearInterval(ASYNC_TIMER)
+      document.querySelector("#timer_toggler").value = "Запустить таймер"
+
+      IS_TIMER_RUN = false;
+    }else{
+      console.log("go!");
+
+      var start = Date.now();
+      ASYNC_TIMER = setInterval(function() {
+          var delta = Date.now() - start; // milliseconds elapsed since start
+          // delta = Math.round10(delta / 1000, -1); // in seconds
+          delta = (delta / 1000).toFixed(1); // in seconds
+          // alternatively just show wall clock time:
+          // output(new Date().toUTCString());
+          // console.log(delta);
+          document.querySelector("#timer_value").innerText = delta;
+      }, 100); // update about every second
+
+      document.querySelector("#timer_toggler").value = "Остановить таймер"
+
+      IS_TIMER_RUN = true;
+    }
+
+  })
+
+}
+
+
 function toggle_text_layers(){
   if(IS_TEXT_LAYERS_HIDDEN){
     document.querySelector("#node_text_layer").style.display = "";
@@ -622,6 +655,7 @@ function apply_settings(){
   textFillOpacity = document.querySelector("#text_opacity_selector").value;
 
 
+  // addTimer();
   generate_links_weights();
   calc_links_count();
   mark_random_nodes(markedNodesCount);
@@ -648,6 +682,8 @@ function apply_settings(){
     textFillOpacity: textFillOpacity
   })
 
+  addTimer();
+
   if(IS_TEXT_LAYERS_HIDDEN){
     document.querySelector("#node_text_layer").style.display = "none";
     document.querySelector("#link_text_layer").style.display = "none";
@@ -656,35 +692,3 @@ function apply_settings(){
 }
 
 
-function addTimer(){
-  document.querySelector("#timer_toggler").addEventListener("click", function(e){
-    if(IS_TIMER_RUN){
-      console.log('stop');
-
-      clearInterval(ASYNC_TIMER)
-      document.querySelector("#timer_toggler").value = "Запустить таймер"
-
-      IS_TIMER_RUN = false;
-    }else{
-      console.log("go!");
-
-      var start = Date.now();
-      ASYNC_TIMER = setInterval(function() {
-          var delta = Date.now() - start; // milliseconds elapsed since start
-          // delta = Math.round10(delta / 1000, -1); // in seconds
-          delta = (delta / 1000).toFixed(1); // in seconds
-          // alternatively just show wall clock time:
-          // output(new Date().toUTCString());
-          // console.log(delta);
-          document.querySelector("#timer_value").innerText = delta;
-      }, 100); // update about every second
-
-      document.querySelector("#timer_toggler").value = "Остановить таймер"
-
-      IS_TIMER_RUN = true;
-    }
-
-  })
-
-}
-addTimer();
