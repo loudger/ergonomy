@@ -24,13 +24,15 @@
             <p>Прозрачность рамки узла: <input type="number" id="nodes_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.5"></p>
             <p>Цвет рамки узла: <input type="color" id="nodes_stroke_color_selector" value="#000000"></p>
             <p>Прозрачность узла: <input type="number" id="nodes_opacity_selector" min="0" max="1" step="0.05" value="0.95"></p>
+            <p>Коэф. диаметра узла: <input type="number" id="nodes_radius_coefficient_selector" min="2" max="100" step="1" value="10"></p>
             <hr>
             <p>Цвет ребра: <input type="color" id="link_stroke_color_selector" value="#46a4c3"></p>
             <p>Отметить рёбер: <input type="number" id="marked_links_count_selector" value="0" onchange="apply_settings()"></p>
             <p>Цвет отмеченного узла: <input type="color" id="marked_links_color_selector" value="#ff0000"></p>
             <p>Ширина ребра (px): <input type="number" id="link_stroke_width_selector" value="2"></p>
             <p>Длина ребра (px): <input type="number" id="link_distance_selector" value="70"></p>
-            <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.95"></p>
+            <!-- <p>Прозрачность ребра: <input type="number" id="link_stroke_opacity_selector" min="0" max="1" step="0.05" value="0.95"></p> -->
+            <p>Коэф. прозрачности ребра: <input type="number" id="link_stroke_opacity_coefficient_selector" min="0.5" max="10" step="0.5" value="1"></p>
             <hr>
             <p>Цвет текста: <input type="color" id="text_color_selector" value="purple"></p>
             <p>Прозрачность текста: <input type="number" id="text_opacity_selector" min="0" max="1" step="0.05" value="0.75"></p>
